@@ -19,14 +19,19 @@ var BOB = (function() {
       courses.sort(function(c1, c2) {
         return c1.count < c2.count;
       });
-      for (var i = 0; i <= courses.length; i++) {
+      console.log(courses);
+      for (var i = 0; i < courses.length; i++) {
         course = courses[i];
-        $('<tr>' +
+        console.log(course);
+        $list.append(
+          '<tr>' +
             '<td>' + course.count + '</td>' +
-            '<td>' + course.code + ': ' + course.name + '</td>' +
+            '<td>' + course.code + ': ' + course.name + 
+              '  <a href="http://brown.mochacourses.com/mocha/search.action?q=' +
+              course.code + '">Mocha</a></td>' +
             '<td>' + course.professor + '</td>' +
-          '</tr>')
-        .appendTo($list);
+          '</tr>'
+        );
       }
     });
   };

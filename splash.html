@@ -9,6 +9,31 @@
   <script src="bob-splash.js"></script>
 </head>
 <body>
+	
+  <!-- Facebook Initialization -->
+	<div id="fb-root"></div>
+	<script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '321089101262902', // App ID
+	      //channelUrl : '//cs.brown.edu/people/jmkagan/bob/channel.html', // Channel File
+	      status     : true, // check login status
+	      cookie     : true, // enable cookies to allow the server to access the session
+	      xfbml      : true,  // parse XFBML
+        oauth      : true
+	    });
+
+	    // Additional initialization code here
+	  };
+
+	  // Load the SDK Asynchronously
+	  (function(d){
+	     var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+	     js = d.createElement('script'); js.id = id; js.async = true;
+	     js.src = "//connect.facebook.net/en_US/all.js";
+	     d.getElementsByTagName('head')[0].appendChild(js);
+	   }(document));
+	</script>
 
   <div id="main">
     <h1>Best of Brown</h1>
@@ -25,6 +50,7 @@
     </div>
     <div id="submit-wrap">
       <button id="submit">View the Overall Favorites</button>
+      <div class="fb-login-button">Login with Facebook</div>
     </div>
   </div>
 
