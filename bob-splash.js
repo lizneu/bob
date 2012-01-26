@@ -13,7 +13,14 @@ var BOB = (function() {
     });
   };
 
-  me.sendFavorites = function(callback) {
+  me.submitCourses = function(fbid, callback) {
+    $.post('submit_favorites.php', {
+      fbid: fbid,
+      cids: [_selected[1] + _selected[2] + _selected[3]]
+    }, function (response) {
+      // TODO handle actual response
+      callback(true);
+    });
   };
 
   function _toggleSubmitEnabled() {
@@ -24,9 +31,26 @@ var BOB = (function() {
   me.init = function() {
 
     $('#submit')
-      .button({ 'disabled' : true })
+      .button({ 'disabled' : false })
       .click(function() {
-        console.log(_selected[1] + ', ' + _selected[2] + ', ' + _selected[3]);
+        FB.login(function (response) {
+          if (response.authResponse) {
+            console.log("Login successful");
+            me.submitCourses(
+              response.authResponse.userId,
+              function (success) {
+                if (success) {
+                  window.location = 'list.html';
+                } else {
+                  // TODO handle failed submit
+                  console.log('Unsuccessful submit!');
+                }
+              }
+            );
+          } else {
+            console.log("Login cancelled");
+          }
+        });
       });
 
     me.getAllCourses(function(response) {
