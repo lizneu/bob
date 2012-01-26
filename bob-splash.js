@@ -13,6 +13,9 @@ var BOB = (function() {
     });
   };
 
+  me.sendFavorites = function(callback) {
+  };
+
   function _toggleSubmitEnabled() {
     $('#submit').button('option', 'disabled',
         !(_selected[1] && _selected[2] && _selected[3]));
