@@ -1,10 +1,9 @@
 var BOB = (function() {
   var me = {};
 
-  var _courses;
+  var _courses, _selected = {};
 
   me.getAllCourses = function(callback) {
-    console.log('get');
     $.getJSON('test-data.json', function(response) {
       if (response && response.length) {
         callback(response);
@@ -14,37 +13,46 @@ var BOB = (function() {
     });
   };
 
-  function _toggleSubmit() {
-    var someEmpty = false;
-    for (var i = 1; i <= 3; i++) {
-      if ($('#fav' + i).val() === '') {
-        someEmpty = true;
-        break;
-      }
-    }
-    $('#submit').button('option', 'disabled', someEmpty);
+  function _toggleSubmitEnabled() {
+    $('#submit').button('option', 'disabled',
+        !(_selected[1] && _selected[2] && _selected[3]));
   }
 
   me.init = function() {
-    $('#submit').button({ 'disabled' : true });
+
+    $('#submit')
+      .button({ 'disabled' : true })
+      .click(function() {
+        console.log(_selected[1] + ', ' + _selected[2] + ', ' + _selected[3]);
+      });
+
     me.getAllCourses(function(response) {
       var courses = response.map(function(course) {
         return {
-          label: course.code + ' : ' + course.name
-            + ' - ' + course.professor,
+          label: course.code + ' : ' + course.name +
+            ' - ' + course.professor,
           cid: course.cid
         };
       });
-      for (var i = 1; i <= 3; i++) {
+
+      function _bindHandlers(i) {
         $('#fav' + i).autocomplete({
           source: courses
         })
         .bind('autocompleteselect', function(event, ui) {
-          _toggleSubmit();
-          // TODO mark or remove dups
           // TODO do something with the cid
+          _selected[i] = ui.item.cid;
+          _toggleSubmitEnabled();
+          // TODO mark or remove dups
         })
-        .change(_toggleSubmit)
+        .change(function () {
+          _selected[i] = null;
+          _toggleSubmitEnabled();
+        });
+      }
+      for (var i = 1; i <= 3; i++) {
+        _bindHandlers(i);
+      }
           /* TODO figure out a way to make it only catch backspaces
                 after a course has been selected
         .keydown(function(event) {
@@ -52,9 +60,8 @@ var BOB = (function() {
             $(this).val('');
           }
         });
-        /*
+        */
 
-      }
 
     });
   };
